@@ -15,21 +15,24 @@ import {
   Unlock,
   AlertTriangle,
   HelpCircle,
-  Palette,
   QrCode,
   ArrowRight,
   ChevronRight,
   Sparkles,
-  ShoppingBag,
-  SlidersHorizontal,
-  UtensilsCrossed,
-  Copy,
-  Check,
   Smartphone,
   ShieldCheck,
   RefreshCw,
-  Eye,
-  Tv
+  Tv,
+  Check,
+  Rocket,
+  Video,
+  Clapperboard,
+  Clock,
+  Lightbulb,
+  Share2,
+  Film,
+  UtensilsCrossed,
+  Target
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -46,10 +49,12 @@ interface StepData {
   title: string;
   badge: string;
   subtitle: string;
-  videoId: string;
-  coverTag: string;
-  coverColor: string;
-  coverHighlights: string[];
+  isVideoStep: boolean;
+  isComingSoonVideo?: boolean;
+  videoId?: string;
+  coverTag?: string;
+  coverColor?: string;
+  coverHighlights?: string[];
   description: string[];
   importantNotice?: string;
   callout?: {
@@ -66,9 +71,11 @@ const STEPS: StepData[] = [
   {
     id: 1,
     title: "Como Inserir os Pratos no seu Cardápio",
-    badge: "Etapa 1 de 3",
+    badge: "Etapa 1 de 4",
     subtitle: "Cadastro inicial de pratos, guarnições e fotos no seu cardápio",
-    videoId: "1y16SH-Y5MOt_Jio8qwOAxbpg8hBOijKz",
+    isVideoStep: true,
+    isComingSoonVideo: false,
+    videoId: "1l0u3uTrnalEAS6d3GJUJbwgZAUyUg6d_",
     coverTag: "CADASTRO & CARDÁPIO",
     coverColor: "from-[#424733] via-[#333726] to-[#1f2216]",
     coverHighlights: ["Fotos & Preços", "Guarnições & Tamanhos", "Salvar no Cardápio"],
@@ -79,7 +86,7 @@ const STEPS: StepData[] = [
     checklist: [
       "Assistir ao vídeo com o passo a passo do cadastro",
       "Acessar o link do seu painel administrativo",
-      "Cadastrar todos os pratos com nomes, fotos e preços",
+      "Cadastrar todos os pratos com nomes, fotos e preços (formato: 1080 x 1080)",
       "Salvar todas as alterações no cardápio"
     ],
     notifyText: "Avisar a Pati que cadastrei os itens",
@@ -88,8 +95,10 @@ const STEPS: StepData[] = [
   {
     id: 2,
     title: "Configuração das Mensagens no Painel ADM",
-    badge: "Etapa 2 de 3",
+    badge: "Etapa 2 de 4",
     subtitle: "Personalize as mensagens automáticas e textos do seu aplicativo",
+    isVideoStep: true,
+    isComingSoonVideo: true,
     videoId: "1AI0c9I1NVthwxt4L8iWdVTdtdw4Fz_mZ",
     coverTag: "MENSAGENS & PAINEL ADM",
     coverColor: "from-[#613C26] via-[#482b1b] to-[#2b170c]",
@@ -106,7 +115,6 @@ const STEPS: StepData[] = [
       text: "Utilize o link e a senha de acesso que enviei para você anteriormente para entrar na área administrativa do seu app."
     },
     checklist: [
-      "Assistir ao vídeo da Etapa 2 atentamente",
       "Fazer login no painel administrativo com sua senha",
       "Ajustar as mensagens do app para o tom da sua marmitaria",
       "Revisar informações de pagamento e avisos aos clientes",
@@ -118,8 +126,10 @@ const STEPS: StepData[] = [
   {
     id: 3,
     title: "Como Entender o Pedido do seu Cliente",
-    badge: "Etapa 3 de 3",
+    badge: "Etapa 3 de 4",
     subtitle: "Aprenda a visualizar, gerenciar e confirmar os pedidos recebidos",
+    isVideoStep: true,
+    isComingSoonVideo: true,
     videoId: "1dgcUkrJGWIAuIQWyvodgAkxcv_7C7PkH",
     coverTag: "FLUXO DE PEDIDOS & CLIENTE",
     coverColor: "from-[#35432b] via-[#424733] to-[#202919]",
@@ -134,17 +144,36 @@ const STEPS: StepData[] = [
     callout: {
       type: 'ready',
       title: "🚀 Quase pronto para o lançamento!",
-      text: "Depois dessa etapa, sua marmitaria estará pronta para divulgar o link para os clientes, redes sociais e embalagens!"
+      text: "Depois dessa etapa, sua marmitaria estará pronta para a Etapa 4 de divulgação oficial!"
     },
     checklist: [
-      "Assistir ao vídeo da Etapa 3 sobre fluxo de pedidos",
       "Fazer um pedido simulado de teste no seu app",
       "Verificar como o pedido chega no painel e no WhatsApp",
       "Confirmar que você compreendeu todo o fluxo de atendimento",
-      "Dar o OK final para começar a divulgar aos clientes!"
+      "Dar o OK final para avançar para a Etapa 4 de Lançamento!"
     ],
     notifyText: "Avisar a Pati que o app está pronto!",
-    whatsappMessage: "Olá Pati, concluí a ETAPA 3 do meu aplicativo! Já assisti ao vídeo, entendi o recebimento de pedidos e meu app está pronto para divulgar aos meus clientes! 🎉"
+    whatsappMessage: "Olá Pati, concluí a ETAPA 3 do meu aplicativo! Entendi o fluxo de pedidos no painel e estou pronta para a Etapa 4 de divulgação! 🎉"
+  },
+  {
+    id: 4,
+    title: "Estratégia de Lançamento e Divulgação",
+    badge: "Etapa 4 de 4",
+    subtitle: "Roteiro essencial com dois vídeos para engajar clientes e gerar pedidos",
+    isVideoStep: false,
+    description: [
+      "O seu aplicativo já está com todas as informações cadastradas, testes finalizados e pronto para ser divulgado para os seus clientes!",
+      "Para garantir que o lançamento seja um verdadeiro sucesso e traga muitos pedidos, apenas jogar o link nas redes sociais não é suficiente. O segredo está em gerar desejo e explicar com clareza como o cliente deve usar a nova ferramenta.",
+      "Preparamos um roteiro com dois vídeos essenciais que recomendamos você gravar e postar antes de liberar o link oficial. Veja o passo a passo abaixo:"
+    ],
+    checklist: [
+      "Gravar o Vídeo 1: Tutorial prático de gravação de tela no celular",
+      "Gravar o Vídeo 2: Apresentação do cardápio, regras de pedidos e dietas",
+      "Colocar o link do app na bio do Instagram e no WhatsApp",
+      "Publicar os vídeos e fazer o lançamento oficial para os clientes!"
+    ],
+    notifyText: "Avisar a Pati que lancei o aplicativo!",
+    whatsappMessage: "Olá Pati, concluí todas as etapas e já estou preparando os vídeos de lançamento para divulgar o meu aplicativo aos clientes! 🚀🎉"
   }
 ];
 
@@ -200,7 +229,7 @@ export default function App() {
       setCompletedSteps(prev => prev.filter(id => id !== stepId));
     } else {
       setCompletedSteps(prev => [...prev, stepId]);
-      if (stepId < 3) {
+      if (stepId < STEPS.length) {
         setActiveStep(stepId + 1);
       }
     }
@@ -214,7 +243,14 @@ export default function App() {
     setPlayingVideoSteps(prev => ({ ...prev, [stepId]: false }));
   };
 
+  // Checa se a etapa está desbloqueada: Etapa 1 sempre liberada; etapas seguintes requerem a anterior concluída
+  const isStepUnlocked = (stepId: number) => {
+    if (stepId === 1) return true;
+    return completedSteps.includes(stepId - 1);
+  };
+
   const currentStepData = STEPS.find(s => s.id === activeStep) || STEPS[0];
+  const isCurrentStepUnlocked = isStepUnlocked(currentStepData.id);
   const isVideoPlaying = !!playingVideoSteps[currentStepData.id];
 
   const totalProgressPercent = Math.round((completedSteps.length / STEPS.length) * 100);
@@ -267,7 +303,7 @@ export default function App() {
                 className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border-2 sm:border-3 border-white bg-[#FAF8F5] aspect-[3/4] group"
               >
                 <img
-                  src="https://i.ibb.co/5hRZcYYL/chefegn.png"
+                  src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/chefegn.png"
                   alt="Chef Gabi Paludo - EGN"
                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   loading="eager"
@@ -286,7 +322,7 @@ export default function App() {
                 className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border-2 sm:border-3 border-white bg-[#FAF8F5] aspect-[3/4] group"
               >
                 <img
-                  src="https://i.ibb.co/Tx7k6D8f/patiebc.jpg"
+                  src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/patiebc.jpg"
                   alt="Pati Guimarães - EASY BYZ"
                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   loading="eager"
@@ -306,7 +342,7 @@ export default function App() {
               <div className="bg-[#424733] text-white p-3 rounded-2xl shadow-sm border border-[#613C26] flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] text-[#A38C66] font-bold uppercase tracking-wider">Seu Progresso</span>
-                  <span className="text-xs font-bold text-white">{completedSteps.length} de 3 etapas</span>
+                  <span className="text-xs font-bold text-white">{completedSteps.length} de {STEPS.length} etapas</span>
                 </div>
                 <div className="flex items-center gap-2 mt-1.5">
                   <div className="flex-1 bg-white/20 h-2 rounded-full overflow-hidden">
@@ -339,14 +375,12 @@ export default function App() {
               <span>Manual de Configuração e Ativação do App</span>
             </div>
 
-            {/* Imagem 2: Título com o ajuste solicitado */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#424733] tracking-tight leading-tight">
               Parabéns! O seu aplicativo foi criado. Agora <span className="text-[#613C26] underline decoration-[#859159]">vamos aos ajustes finais do app da sua marmitaria</span>.
             </h1>
 
-            {/* Imagem 3: Texto com o ajuste solicitado */}
             <p className="text-sm sm:text-base text-[#424733]/85 leading-relaxed">
-              Eu te entreguei o app personalizado de acordo com as informações da rotina da sua marmitaria que você me respondeu no questionário inicial. Em seguida, preparei estes <strong>vídeos práticos em 3 etapas</strong> para que você possa inserir seus pratos, configurar suas mensagens no painel e fazer os testes finais com total segurança antes de começar a divulgar para seus clientes.
+              Eu te entreguei o app personalizado de acordo com as informações da rotina da sua marmitaria que você me respondeu no questionário inicial. Em seguida, preparei este <strong>guia prático em 4 etapas</strong> para que você possa inserir seus pratos, configurar suas mensagens no painel, fazer os testes finais e planejar a divulgação oficial com segurança antes de começar a divulgar para seus clientes.
             </p>
 
             {/* Banner de Aviso de Sequência (Destaque Principal) */}
@@ -359,8 +393,8 @@ export default function App() {
                   <span>📌 Regra de Ouro: Siga estritamente a sequência das etapas!</span>
                 </h3>
                 <p className="text-xs sm:text-sm text-amber-800 leading-relaxed">
-                  É fundamental assistir e realizar <strong>uma etapa por vez (1 → 2 → 3)</strong>. 
-                  Não pule para o vídeo seguinte se você ainda não concluiu e testou o anterior, para que tudo fique perfeito no final!
+                  É fundamental assistir e realizar <strong>uma etapa por vez (1 → 2 → 3 → 4)</strong>. 
+                  Não pule para a etapa seguinte se você ainda não concluiu e testou a anterior, para que tudo fique perfeito no final!
                 </p>
               </div>
             </div>
@@ -372,13 +406,13 @@ export default function App() {
       {/* Main Content Area */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         
-        {/* Navegador das 3 Etapas (Tabs / Stepper) */}
-        <section className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Navegador das 4 Etapas (Tabs / Stepper) */}
+        <section className="mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {STEPS.map((step) => {
               const isCompleted = completedSteps.includes(step.id);
               const isActive = activeStep === step.id;
-              const isPreviousCompleted = step.id === 1 || completedSteps.includes(step.id - 1);
+              const unlocked = isStepUnlocked(step.id);
 
               return (
                 <button
@@ -388,8 +422,9 @@ export default function App() {
                     "relative p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-3 shadow-xs",
                     isActive 
                       ? "bg-white border-[#613C26] ring-2 ring-[#613C26]/20 shadow-md" 
-                      : "bg-[#FAF8F5] border-[#A38C66]/30 hover:border-[#859159] hover:bg-white",
-                    !isPreviousCompleted && "opacity-85"
+                      : unlocked
+                        ? "bg-[#FAF8F5] border-[#A38C66]/30 hover:border-[#859159] hover:bg-white"
+                        : "bg-[#F3EFEA] border-dashed border-[#A38C66]/40 opacity-80 hover:opacity-100"
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -399,7 +434,9 @@ export default function App() {
                         ? "bg-[#613C26] text-white" 
                         : isCompleted 
                           ? "bg-[#859159] text-white" 
-                          : "bg-[#424733]/10 text-[#424733]"
+                          : unlocked
+                            ? "bg-[#424733]/10 text-[#424733]"
+                            : "bg-amber-100 text-amber-900 border border-amber-300"
                     )}>
                       {step.badge}
                     </span>
@@ -409,15 +446,15 @@ export default function App() {
                         <CheckCircle2 className="w-4 h-4" />
                         Concluída
                       </span>
-                    ) : !isPreviousCompleted ? (
-                      <span className="flex items-center gap-1 text-[11px] text-[#A38C66]">
-                        <Lock className="w-3.5 h-3.5" />
-                        Requer Etapa {step.id - 1}
+                    ) : !unlocked ? (
+                      <span className="flex items-center gap-1 text-[11px] font-bold text-amber-800">
+                        <Lock className="w-3.5 h-3.5 text-amber-700" />
+                        Bloqueada
                       </span>
                     ) : (
                       <span className="flex items-center gap-1 text-[11px] text-[#424733]/60">
                         <Unlock className="w-3.5 h-3.5" />
-                        Em aberto
+                        Liberada
                       </span>
                     )}
                   </div>
@@ -432,10 +469,18 @@ export default function App() {
                   </div>
 
                   <div className="pt-2 border-t border-[#A38C66]/15 flex items-center justify-between text-xs font-semibold">
-                    <span className={isActive ? "text-[#613C26]" : "text-[#859159]"}>
-                      {isActive ? "Visualizando agora" : "Abrir instruções"}
+                    <span className={isActive ? "text-[#613C26]" : unlocked ? "text-[#859159]" : "text-amber-800"}>
+                      {isActive 
+                        ? "Visualizando agora" 
+                        : unlocked 
+                          ? "Abrir instruções" 
+                          : `Requer Etapa ${step.id - 1}`}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-[#A38C66]" />
+                    {unlocked ? (
+                      <ChevronRight className="w-4 h-4 text-[#A38C66]" />
+                    ) : (
+                      <Lock className="w-3.5 h-3.5 text-amber-700" />
+                    )}
                   </div>
                 </button>
               );
@@ -480,322 +525,611 @@ export default function App() {
         {/* Bloco de Detalhes da Etapa Atual */}
         <section className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-[#A38C66]/30 space-y-8">
           
-          {/* Cabeçalho da Etapa Selecionada */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#A38C66]/20">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-[#613C26] text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                  {currentStepData.badge}
+          {/* Se a etapa estiver BLOQUEADA porque a anterior não foi concluída */}
+          {!isCurrentStepUnlocked ? (
+            <div className="py-12 px-4 sm:px-8 text-center max-w-xl mx-auto space-y-5">
+              <div className="w-20 h-20 mx-auto rounded-3xl bg-amber-100 border-2 border-amber-300 text-amber-800 flex items-center justify-center shadow-inner">
+                <Lock className="w-10 h-10 text-amber-700" />
+              </div>
+
+              <div className="space-y-2">
+                <span className="inline-block bg-amber-100 text-amber-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                  Etapa Bloqueada
                 </span>
-                {completedSteps.includes(currentStepData.id) ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-bold text-[#859159] bg-[#859159]/15 px-2.5 py-1 rounded-full">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Etapa Marcada como Concluída
-                  </span>
-                ) : (
-                  <span className="text-xs text-[#424733]/60 font-medium">
-                    Siga o passo a passo com calma
-                  </span>
-                )}
+                <h3 className="text-xl sm:text-2xl font-black text-[#424733]">
+                  Conclua a Etapa {currentStepData.id - 1} primeiro!
+                </h3>
+                <p className="text-xs sm:text-sm text-[#424733]/80 leading-relaxed">
+                  Para que a rotina do seu aplicativo fique perfeita e sem nenhuma informação faltando para os seus clientes, é fundamental seguir a ordem correta das etapas.
+                </p>
               </div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#424733]">
-                {currentStepData.title}
-              </h2>
-              <p className="text-xs sm:text-sm text-[#424733]/75 mt-1">
-                {currentStepData.subtitle}
-              </p>
-            </div>
 
-            {/* Botão de Marcar como Concluído */}
-            <button
-              onClick={() => handleToggleStepComplete(currentStepData.id)}
-              className={cn(
-                "px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 shadow-sm",
-                completedSteps.includes(currentStepData.id)
-                  ? "bg-[#859159] hover:bg-[#424733] text-white"
-                  : "bg-[#FAF8F5] hover:bg-[#859159] text-[#424733] hover:text-white border border-[#A38C66]/40"
-              )}
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>
-                {completedSteps.includes(currentStepData.id) 
-                  ? "Etapa Concluída (Clique para reabrir)" 
-                  : "Marcar Etapa como Concluída"}
-              </span>
-            </button>
-          </div>
-
-          {/* Imagem 1: Player do Vídeo com Capa Visual Customizada na Frente */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="text-base sm:text-lg font-extrabold text-[#424733] flex items-center gap-2">
-                <Play className="w-5 h-5 text-[#859159] fill-[#859159]" />
-                <span>▶️ Assista ao vídeo explicativo desta etapa:</span>
-              </h3>
-              
-              <div className="flex items-center gap-3">
-                {isVideoPlaying && (
-                  <button
-                    onClick={() => resetToCover(currentStepData.id)}
-                    className="text-xs font-bold text-[#424733]/70 hover:text-[#613C26] inline-flex items-center gap-1 cursor-pointer transition-colors"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    <span>Ver capa</span>
-                  </button>
-                )}
-
-                <a
-                  href={`https://drive.google.com/file/d/${currentStepData.videoId}/view?usp=sharing`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs sm:text-sm font-bold text-[#613C26] hover:text-[#859159] inline-flex items-center gap-1 underline underline-offset-4"
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={() => {
+                    setActiveStep(currentStepData.id - 1);
+                    window.scrollTo({ top: 320, behavior: 'smooth' });
+                  }}
+                  className="w-full sm:w-auto px-6 py-3 bg-[#613C26] hover:bg-[#859159] text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span>Abrir no Google Drive</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                  <ArrowRight className="w-4 h-4 rotate-180" />
+                  <span>Voltar para a Etapa {currentStepData.id - 1}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCompletedSteps(prev => [...prev, currentStepData.id - 1]);
+                  }}
+                  className="w-full sm:w-auto px-5 py-3 bg-[#FAF8F5] hover:bg-[#859159] text-[#424733] hover:text-white border border-[#A38C66]/40 font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-[#859159]" />
+                  <span>Já finalizei a Etapa {currentStepData.id - 1} (Liberar)</span>
+                </button>
               </div>
             </div>
-
-            {/* Container 16:9 - Capa Estilizada OU Player Iframe */}
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/95 shadow-2xl border-2 border-[#424733] group">
-              
-              {!isVideoPlaying ? (
-                /* CAPA VISUAL PERSONALIZADA NA FRENTE DO VÍDEO */
-                <div 
-                  onClick={() => startPlaying(currentStepData.id)}
-                  className={cn(
-                    "w-full h-full relative flex flex-col justify-between p-4 sm:p-8 cursor-pointer select-none bg-gradient-to-br transition-all duration-300",
-                    currentStepData.coverColor
-                  )}
-                >
-                  {/* Textura geométrica sutil no fundo */}
-                  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-                  
-                  {/* Barra Superior da Capa */}
-                  <div className="relative z-10 flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 bg-black/50 text-[#F0F0F0] text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-xs uppercase tracking-wider">
-                      <Tv className="w-3.5 h-3.5 text-[#859159]" />
-                      <span>{currentStepData.coverTag}</span>
-                    </span>
-
-                    <span className="bg-[#613C26]/80 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full border border-[#A38C66]/40 backdrop-blur-xs">
+          ) : (
+            /* CONTEÚDO LIBERADO DA ETAPA */
+            <>
+              {/* Cabeçalho da Etapa Selecionada */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#A38C66]/20">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="bg-[#613C26] text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
                       {currentStepData.badge}
                     </span>
+                    {completedSteps.includes(currentStepData.id) ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-[#859159] bg-[#859159]/15 px-2.5 py-1 rounded-full">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Etapa Marcada como Concluída
+                      </span>
+                    ) : (
+                      <span className="text-xs text-[#424733]/60 font-medium">
+                        Siga o passo a passo com calma
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#424733]">
+                    {currentStepData.title}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#424733]/75 mt-1">
+                    {currentStepData.subtitle}
+                  </p>
+                </div>
+
+                {/* Botão de Marcar como Concluído */}
+                <button
+                  onClick={() => handleToggleStepComplete(currentStepData.id)}
+                  className={cn(
+                    "px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 shadow-sm",
+                    completedSteps.includes(currentStepData.id)
+                      ? "bg-[#859159] hover:bg-[#424733] text-white"
+                      : "bg-[#FAF8F5] hover:bg-[#859159] text-[#424733] hover:text-white border border-[#A38C66]/40"
+                  )}
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>
+                    {completedSteps.includes(currentStepData.id) 
+                      ? "Etapa Concluída (Clique para reabrir)" 
+                      : "Marcar Etapa como Concluída"}
+                  </span>
+                </button>
+              </div>
+
+              {/* Se for etapa com VÍDEO (Etapas 1, 2 e 3) */}
+              {currentStepData.isVideoStep && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <h3 className="text-base sm:text-lg font-extrabold text-[#424733] flex items-center gap-2">
+                      <Play className="w-5 h-5 text-[#859159] fill-[#859159]" />
+                      <span>▶️ Assista ao vídeo explicativo desta etapa:</span>
+                    </h3>
+                    
+                    <div className="flex items-center gap-3">
+                      {isVideoPlaying && (
+                        <button
+                          onClick={() => resetToCover(currentStepData.id)}
+                          className="text-xs font-bold text-[#424733]/70 hover:text-[#613C26] inline-flex items-center gap-1 cursor-pointer transition-colors"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5" />
+                          <span>Ver capa</span>
+                        </button>
+                      )}
+
+                      {!currentStepData.isComingSoonVideo && currentStepData.videoId && (
+                        <a
+                          href={`https://drive.google.com/file/d/${currentStepData.videoId}/view?usp=sharing`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs sm:text-sm font-bold text-[#613C26] hover:text-[#859159] inline-flex items-center gap-1 underline underline-offset-4"
+                        >
+                          <span>Abrir no Google Drive</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Centro da Capa: Botão de Play Grande Pulsante e Título */}
-                  <div className="relative z-10 flex flex-col items-center justify-center text-center my-auto space-y-3">
-                    <div className="relative">
-                      {/* Efeito de Ping no Play */}
-                      <span className="absolute -inset-2 rounded-full bg-[#859159]/40 animate-ping pointer-events-none" />
-                      
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#859159] group-hover:bg-[#613C26] text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 border-2 border-white/40">
-                        <Play className="w-7 h-7 sm:w-9 sm:h-9 fill-white text-white ml-1 transition-transform group-hover:scale-105" />
+                  {/* Container 16:9 - Capa Estilizada OU Player/Em Breve */}
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/95 shadow-2xl border-2 border-[#424733] group">
+                    
+                    {!isVideoPlaying ? (
+                      /* CAPA VISUAL PERSONALIZADA NA FRENTE DO VÍDEO */
+                      <div 
+                        onClick={() => startPlaying(currentStepData.id)}
+                        className={cn(
+                          "w-full h-full relative flex flex-col justify-between p-4 sm:p-8 cursor-pointer select-none bg-gradient-to-br transition-all duration-300",
+                          currentStepData.coverColor || "from-[#424733] to-[#1f2216]"
+                        )}
+                      >
+                        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+                        
+                        {/* Barra Superior da Capa */}
+                        <div className="relative z-10 flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center gap-1.5 bg-black/50 text-[#F0F0F0] text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-xs uppercase tracking-wider">
+                            <Tv className="w-3.5 h-3.5 text-[#859159]" />
+                            <span>{currentStepData.coverTag}</span>
+                          </span>
+
+                          <span className="bg-[#613C26]/80 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full border border-[#A38C66]/40 backdrop-blur-xs">
+                            {currentStepData.badge}
+                          </span>
+                        </div>
+
+                        {/* Centro da Capa: Botão de Play Grande Pulsante e Título */}
+                        <div className="relative z-10 flex flex-col items-center justify-center text-center my-auto space-y-3">
+                          <div className="relative">
+                            <span className="absolute -inset-2 rounded-full bg-[#859159]/40 animate-ping pointer-events-none" />
+                            
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#859159] group-hover:bg-[#613C26] text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 border-2 border-white/40">
+                              <Play className="w-7 h-7 sm:w-9 sm:h-9 fill-white text-white ml-1 transition-transform group-hover:scale-105" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 max-w-lg mx-auto">
+                            <h4 className="text-white font-black text-base sm:text-xl md:text-2xl leading-tight drop-shadow-md">
+                              {currentStepData.title}
+                            </h4>
+                            <p className="text-white/80 text-xs sm:text-sm font-medium drop-shadow-xs">
+                              {currentStepData.subtitle}
+                            </p>
+                          </div>
+
+                          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-bold backdrop-blur-sm border border-white/30 shadow-md transition-all group-hover:scale-105">
+                            <Play className="w-3.5 h-3.5 fill-white" />
+                            <span>Clique para assistir ao vídeo</span>
+                          </div>
+                        </div>
+
+                        {/* Barra Inferior da Capa com Highlights da Etapa */}
+                        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/15 text-[10px] sm:text-xs text-white/80">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-[#A38C66] uppercase text-[9px] sm:text-[10px]">Destaques da aula:</span>
+                            {currentStepData.coverHighlights?.map((hl, i) => (
+                              <span key={i} className="bg-white/10 px-2 py-0.5 rounded-md border border-white/10 font-medium">
+                                {hl}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-white/60 font-medium hidden sm:inline">
+                            Aula gravada pela Pati • EASY BYZ
+                          </span>
+                        </div>
+                      </div>
+                    ) : currentStepData.isComingSoonVideo ? (
+                      /* TELA "EM BREVE" PARA VÍDEOS 2 E 3 */
+                      <div className="w-full h-full relative flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#2D241E] via-[#382B22] to-[#1C1510] text-white">
+                        <div className="relative mb-4">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-[#613C26] border-2 border-[#A38C66]/50 flex items-center justify-center text-white shadow-2xl">
+                            <Clock className="w-8 h-8 sm:w-10 sm:h-10 text-[#A38C66] animate-pulse" />
+                          </div>
+                          <span className="absolute -top-1.5 -right-1.5 px-2 py-0.5 rounded-full bg-[#859159] text-[10px] font-black text-white uppercase tracking-wider shadow-sm">
+                            Gravação
+                          </span>
+                        </div>
+
+                        <div className="max-w-md space-y-2">
+                          <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[#A38C66] text-xs font-bold uppercase tracking-wider border border-white/15">
+                            🎬 Em Breve!
+                          </span>
+                          <h4 className="text-xl sm:text-2xl font-black text-white leading-tight">
+                            Vídeo Explicativo em Gravação
+                          </h4>
+                          <p className="text-xs sm:text-sm text-white/85 leading-relaxed">
+                            A Pati e a Chef Gabi estão regravando esta aula passo a passo com novidades exclusivas para você! Enquanto o novo vídeo é processado, siga com tranquilidade as <strong>instruções e o checklist logo abaixo</strong>.
+                          </p>
+                        </div>
+
+                        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                          <a
+                            href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent(`Olá Pati, estou na ${currentStepData.badge} (${currentStepData.title}) e gostaria de tirar uma dúvida enquanto o vídeo está em breve!`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 bg-[#859159] hover:bg-[#613C26] text-white font-bold text-xs rounded-xl transition-colors shadow-sm flex items-center gap-1.5"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            <span>Tirar Dúvida com a Pati</span>
+                          </a>
+
+                          <button
+                            onClick={() => resetToCover(currentStepData.id)}
+                            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl transition-colors border border-white/20 cursor-pointer flex items-center gap-1.5"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            <span>Voltar à capa</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* IFRAME DO GOOGLE DRIVE (ETAPA 1) */
+                      <iframe
+                        src={`https://drive.google.com/file/d/${currentStepData.videoId}/preview`}
+                        title={`Vídeo explicativo - ${currentStepData.title}`}
+                        className="w-full h-full border-0"
+                        allow="autoplay; fullscreen"
+                        allowFullScreen
+                      />
+                    )}
+
+                  </div>
+
+                  {/* Aviso de Autorização / Permissão de Acesso (para vídeos ativos) */}
+                  {!currentStepData.isComingSoonVideo && (
+                    <div className="bg-sky-50 border border-sky-200 rounded-xl p-3.5 text-xs text-sky-900 flex items-start gap-2.5">
+                      <HelpCircle className="w-4 h-4 text-sky-700 shrink-0 mt-0.5" />
+                      <div className="space-y-0.5">
+                        <span className="font-bold block">💡 O vídeo pediu permissão ou não carregou de primeira?</span>
+                        <p className="text-sky-800/90 leading-relaxed">
+                          Não se preocupe! Você pode clicar em <strong>"Abrir no Google Drive"</strong> acima para solicitar acesso na hora, ou chamar a Pati diretamente no WhatsApp para ela liberar a visualização para o seu e-mail imediatamente! 😉
+                        </p>
                       </div>
                     </div>
-
-                    <div className="space-y-1 max-w-lg mx-auto">
-                      <h4 className="text-white font-black text-base sm:text-xl md:text-2xl leading-tight drop-shadow-md">
-                        {currentStepData.title}
-                      </h4>
-                      <p className="text-white/80 text-xs sm:text-sm font-medium drop-shadow-xs">
-                        {currentStepData.subtitle}
-                      </p>
-                    </div>
-
-                    <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-bold backdrop-blur-sm border border-white/30 shadow-md transition-all group-hover:scale-105">
-                      <Play className="w-3.5 h-3.5 fill-white" />
-                      <span>Clique para assistir ao vídeo</span>
-                    </div>
-                  </div>
-
-                  {/* Barra Inferior da Capa com Highlights da Etapa */}
-                  <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/15 text-[10px] sm:text-xs text-white/80">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-[#A38C66] uppercase text-[9px] sm:text-[10px]">Destaques da aula:</span>
-                      {currentStepData.coverHighlights.map((hl, i) => (
-                        <span key={i} className="bg-white/10 px-2 py-0.5 rounded-md border border-white/10 font-medium">
-                          {hl}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="text-white/60 font-medium hidden sm:inline">
-                      Aula gravada pela Pati • EASY BYZ
-                    </span>
-                  </div>
+                  )}
                 </div>
-              ) : (
-                /* IFRAME DO GOOGLE DRIVE COM CONTROLES DE REPRODUÇÃO */
-                <iframe
-                  src={`https://drive.google.com/file/d/${currentStepData.videoId}/preview`}
-                  title={`Vídeo explicativo - ${currentStepData.title}`}
-                  className="w-full h-full border-0"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                />
               )}
 
-            </div>
+              {/* SE FOR ETAPA 4: ESTRUTURA EDITORIAL COMPLETA DOS DOIS VÍDEOS DE LANÇAMENTO */}
+              {currentStepData.id === 4 ? (
+                <div className="space-y-6">
+                  
+                  {/* Banner de Abertura da Etapa 4 */}
+                  <div className="bg-gradient-to-br from-[#424733] via-[#373b2a] to-[#25281b] text-white p-6 sm:p-8 rounded-2xl shadow-lg border border-[#859159]/40 space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#859159]/30 text-white text-xs font-bold border border-[#859159]/50">
+                      <Rocket className="w-4 h-4 text-[#A38C66]" />
+                      <span>Roteiro Oficial de Lançamento</span>
+                    </div>
 
-            {/* Aviso de Autorização / Permissão de Acesso */}
-            <div className="bg-sky-50 border border-sky-200 rounded-xl p-3.5 text-xs text-sky-900 flex items-start gap-2.5">
-              <HelpCircle className="w-4 h-4 text-sky-700 shrink-0 mt-0.5" />
-              <div className="space-y-0.5">
-                <span className="font-bold block">💡 O vídeo pediu permissão ou não carregou de primeira?</span>
-                <p className="text-sky-800/90 leading-relaxed">
-                  Não se preocupe! Você pode clicar em <strong>"Abrir no Google Drive"</strong> acima para solicitar acesso na hora, ou chamar a Pati diretamente no WhatsApp para ela liberar a visualização para o seu e-mail imediatamente! 😉
-                </p>
-              </div>
-            </div>
-          </div>
+                    <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">
+                      Pronto para ser divulgado para os seus clientes!
+                    </h3>
 
-          {/* Mensagem e Orientações Oficiais da Etapa */}
-          <div className="space-y-3 bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl border border-[#A38C66]/20">
-            <h3 className="font-extrabold text-sm sm:text-base text-[#424733] uppercase tracking-wide text-xs">
-              📝 Instruções da Pati para você:
-            </h3>
+                    <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
+                      O seu aplicativo já está com todas as informações cadastradas, testes finalizados e <strong>pronto para ser divulgado</strong> para os seus clientes!
+                    </p>
 
-            {currentStepData.importantNotice && (
-              <div className="p-3 bg-amber-100/70 border border-amber-300 rounded-xl text-xs sm:text-sm text-amber-900 font-semibold flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-800 shrink-0" />
-                <span>📌 {currentStepData.importantNotice}</span>
-              </div>
-            )}
+                    <p className="text-xs sm:text-sm text-white/85 leading-relaxed">
+                      Para garantir que o lançamento seja um verdadeiro sucesso e traga muitos pedidos, <strong>apenas jogar o link nas redes sociais não é suficiente</strong>. O segredo está em <strong>gerar desejo e explicar com clareza</strong> como o cliente deve usar a nova ferramenta.
+                    </p>
 
-            <div className="space-y-2.5 text-xs sm:text-sm text-[#424733] leading-relaxed">
-              {currentStepData.description.map((paragraph, idx) => (
-                <p key={idx} className="font-medium">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            {/* Informações Específicas por Etapa */}
-            {currentStepData.callout && (
-              <div className="mt-4 pt-4 border-t border-[#A38C66]/20">
-                <div className="p-4 rounded-xl bg-white border border-[#A38C66]/30 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <span className="font-bold text-xs sm:text-sm text-[#424733] block">
-                      {currentStepData.callout.title}
-                    </span>
-                    <p className="text-xs text-[#424733]/80">
-                      {currentStepData.callout.text}
+                    <p className="text-xs sm:text-sm font-semibold text-[#A38C66]">
+                      Preparamos um roteiro com <strong>dois vídeos essenciais</strong> que recomendamos você gravar e postar antes de liberar o link oficial. Veja o passo a passo abaixo:
                     </p>
                   </div>
 
-                  {/* Se for Etapa 2: Link do Painel Administrativo */}
-                  {currentStepData.id === 2 && (
-                    <div className="shrink-0">
-                      <span className="text-[11px] text-[#A38C66] font-bold block mb-1">
-                        🔑 Link enviado no seu WhatsApp
+                  {/* Card Vídeo 1: Tutorial Prático */}
+                  <div className="bg-[#FAF8F5] border-2 border-[#859159]/40 rounded-2xl p-5 sm:p-7 shadow-sm space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#859159] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <Video className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-xs font-extrabold uppercase text-[#859159] tracking-wider block">
+                          Primeiro Conteúdo de Lançamento
+                        </span>
+                        <h4 className="text-base sm:text-lg font-black text-[#424733]">
+                          Vídeo 1: Tutorial Prático (Gravação de Tela)
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 text-xs sm:text-sm text-[#424733]/90 leading-relaxed">
+                      <div className="p-3 bg-white rounded-xl border border-[#A38C66]/20">
+                        <strong className="text-[#613C26] block mb-0.5">🎯 Objetivo:</strong>
+                        <span>Mostrar de forma simples e rápida como é fácil fazer um pedido no seu aplicativo.</span>
+                      </div>
+
+                      <div className="p-3 bg-white rounded-xl border border-[#A38C66]/20">
+                        <strong className="text-[#613C26] block mb-0.5">📱 Como fazer:</strong>
+                        <span>Grave a tela do seu celular enquanto você mesma simula a montagem de um pedido no app.</span>
+                      </div>
+
+                      <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200 text-amber-950">
+                        <strong className="text-amber-900 flex items-center gap-1.5 mb-0.5">
+                          <Lightbulb className="w-4 h-4 text-amber-700" />
+                          <span>Dica prática:</span>
+                        </strong>
+                        <span>
+                          Você pode narrar o passo a passo enquanto grava a tela ou gravar a tela primeiro e narrar por cima depois. 
+                          <strong> Não precisa aparecer o seu rosto</strong>, apenas o aplicativo em ação e a sua voz explicando cada clique.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Vídeo 2: Apresentação Oficial */}
+                  <div className="bg-[#FAF8F5] border-2 border-[#613C26]/40 rounded-2xl p-5 sm:p-7 shadow-sm space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#613C26] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <Clapperboard className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-xs font-extrabold uppercase text-[#613C26] tracking-wider block">
+                          Segundo Conteúdo de Lançamento
+                        </span>
+                        <h4 className="text-base sm:text-lg font-black text-[#424733]">
+                          Vídeo 2: Apresentação Oficial do App
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 text-xs sm:text-sm text-[#424733]/90 leading-relaxed">
+                      <div className="p-3 bg-white rounded-xl border border-[#A38C66]/20">
+                        <strong className="text-[#613C26] block mb-0.5">🎯 Objetivo:</strong>
+                        <span>Engajar o público, tirar dúvidas antecipadas e despertar o desejo de compra.</span>
+                      </div>
+
+                      <div className="p-4 bg-white rounded-xl border border-[#A38C66]/20 space-y-2.5">
+                        <strong className="text-[#613C26] block text-xs uppercase tracking-wider font-extrabold">
+                          📌 Tópicos que você deve abordar no vídeo:
+                        </strong>
+                        
+                        <ul className="space-y-2 list-none pl-0">
+                          <li className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#859159] shrink-0 mt-2" />
+                            <div>
+                              <strong>O Cardápio:</strong> Apresente tudo o que o cliente poderá comprar a partir de agora. Cite alguns itens de destaque e categorias principais (por exemplo: <em>combos, detox, marmitas avulsas</em>).
+                            </div>
+                          </li>
+
+                          <li className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#859159] shrink-0 mt-2" />
+                            <div>
+                              <strong>Como fazer o pedido:</strong> Explique a dinâmica de funcionamento — quais são os dias limite para encomendar, quais são os dias de entrega, e se há opção de retirada no local ou delivery.
+                            </div>
+                          </li>
+
+                          <li className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#859159] shrink-0 mt-2" />
+                            <div>
+                              <strong>Regras e Dietas:</strong> Informe sobre o valor mínimo de pedido (se houver), explique como funciona a opção de <strong>dieta personalizada</strong>, e mostre no vídeo exatamente em qual botão o cliente deve clicar para acessá-la.
+                            </div>
+                          </li>
+
+                          <li className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#859159] shrink-0 mt-2" />
+                            <div>
+                              <strong>Onde encontrar o link:</strong> Avise onde o link do aplicativo estará disponível para acesso rápido (ex: <em>no link da bio do Instagram e na descrição do seu WhatsApp</em>).
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dica de Ouro em Destaque */}
+                  <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 text-amber-950 flex items-start gap-3 shadow-sm">
+                    <div className="p-2 bg-amber-200 text-amber-900 rounded-xl shrink-0 mt-0.5">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-sm sm:text-base text-amber-900 flex items-center gap-1.5">
+                        <span>💡 Dica de Ouro</span>
+                      </h4>
+                      <p className="text-xs sm:text-sm text-amber-900/90 leading-relaxed">
+                        Estas orientações são as principais informações que seu cliente precisa saber antes de receber o link. Com esses dois vídeos prontos e publicados, o lançamento do seu app será muito mais organizado e profissional!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Box de Destaque Importante sobre Vendas e Marmitas */}
+                  <div className="bg-[#FAF8F5] border-2 border-[#613C26] rounded-2xl p-5 sm:p-6 text-[#424733] shadow-md space-y-3 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#859159]/10 rounded-full blur-2xl pointer-events-none" />
+
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-2 bg-[#613C26] text-white rounded-xl shrink-0 shadow-sm">
+                        <UtensilsCrossed className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-xs font-black uppercase text-[#859159] tracking-wider block">
+                          Lembrete Fundamental de Vendas
+                        </span>
+                        <h4 className="font-black text-sm sm:text-base text-[#613C26]">
+                          O aplicativo é a ferramenta de gestão: quem encanta e vende a marmita é você!
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 text-xs sm:text-sm text-[#424733] leading-relaxed">
+                      <p className="font-bold text-[#424733]">
+                        O app veio para ajudar na gestão das suas vendas e agilidade para o seu cliente, ele não vende para você.
+                      </p>
+                      <p className="text-[#424733]/90">
+                        Lembre-se sempre de dar destaque ao seu produto, ao prato e à marmita que você vende. É essencial lembrar que <strong>você vende marmitas</strong>, e é a partir do seu app que o pedido do seu cliente chega até você com organização, praticidade e rapidez!
+                      </p>
+                    </div>
+
+                    <div className="p-3 bg-white/90 rounded-xl border border-[#A38C66]/30 text-xs text-[#424733] flex items-center gap-2 font-medium">
+                      <Target className="w-4 h-4 text-[#859159] shrink-0" />
+                      <span>
+                        Gere desejo nas redes com fotos reais e stories dos pratos quentinhos — o aplicativo cuidará de fechar e organizar cada pedido!
                       </span>
-                      <a
-                        href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent("Olá Pati, você pode me reenviar o link e a senha do meu painel adm, por favor?")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#859159] hover:bg-[#424733] text-white rounded-lg text-xs font-bold transition-colors"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Solicitar Link/Senha à Pati</span>
-                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              ) : (
+                /* INSTRUÇÕES PADRÃO (ETAPAS 1, 2 E 3) */
+                <div className="space-y-3 bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl border border-[#A38C66]/20">
+                  <h3 className="font-extrabold text-sm sm:text-base text-[#424733] uppercase tracking-wide text-xs">
+                    📝 Instruções da Pati para você:
+                  </h3>
+
+                  {currentStepData.importantNotice && (
+                    <div className="p-3 bg-amber-100/70 border border-amber-300 rounded-xl text-xs sm:text-sm text-amber-900 font-semibold flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-800 shrink-0" />
+                      <span>📌 {currentStepData.importantNotice}</span>
                     </div>
                   )}
 
-                  {/* Se for Etapa 3: Checklist para Divulgação */}
-                  {currentStepData.id === 3 && (
-                    <div className="shrink-0">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#859159] bg-[#859159]/10 px-3 py-1.5 rounded-lg">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Quase na hora de enviar aos clientes!</span>
+                  <div className="space-y-2.5 text-xs sm:text-sm text-[#424733] leading-relaxed">
+                    {currentStepData.description.map((paragraph, idx) => (
+                      <p key={idx} className="font-medium">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+
+                  {/* Callout Específico */}
+                  {currentStepData.callout && (
+                    <div className="mt-4 pt-4 border-t border-[#A38C66]/20">
+                      <div className="p-4 rounded-xl bg-white border border-[#A38C66]/30 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="space-y-1">
+                          <span className="font-bold text-xs sm:text-sm text-[#424733] block">
+                            {currentStepData.callout.title}
+                          </span>
+                          <p className="text-xs text-[#424733]/80">
+                            {currentStepData.callout.text}
+                          </p>
+                        </div>
+
+                        {currentStepData.id === 2 && (
+                          <div className="shrink-0">
+                            <span className="text-[11px] text-[#A38C66] font-bold block mb-1">
+                              🔑 Link enviado no seu WhatsApp
+                            </span>
+                            <a
+                              href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent("Olá Pati, você pode me reenviar o link e a senha do meu painel adm, por favor?")}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#859159] hover:bg-[#424733] text-white rounded-lg text-xs font-bold transition-colors"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" />
+                              <span>Solicitar Link/Senha à Pati</span>
+                            </a>
+                          </div>
+                        )}
+
+                        {currentStepData.id === 3 && (
+                          <div className="shrink-0">
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-[#859159] bg-[#859159]/10 px-3 py-1.5 rounded-lg">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span>Pronta para a Etapa 4 de Lançamento!</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
                 </div>
-              </div>
-            )}
-          </div>
+              )}
 
-          {/* Checklist Interativo da Etapa */}
-          <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl border border-[#A38C66]/30 space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="font-extrabold text-sm sm:text-base text-[#424733] flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#859159]" />
-                <span>Checklist da {currentStepData.badge}:</span>
-              </h3>
-              <span className="text-xs text-[#424733]/70">
-                Marque cada item à medida que for completando
-              </span>
-            </div>
+              {/* Checklist Interativo da Etapa */}
+              <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl border border-[#A38C66]/30 space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <h3 className="font-extrabold text-sm sm:text-base text-[#424733] flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#859159]" />
+                    <span>Checklist da {currentStepData.badge}:</span>
+                  </h3>
+                  <span className="text-xs text-[#424733]/70">
+                    Marque cada item à medida que for completando
+                  </span>
+                </div>
 
-            <div className="space-y-2.5">
-              {currentStepData.checklist.map((item, idx) => {
-                const itemKey = `step_${currentStepData.id}_item_${idx}`;
-                const isChecked = !!checkedItems[itemKey];
+                <div className="space-y-2.5">
+                  {currentStepData.checklist.map((item, idx) => {
+                    const itemKey = `step_${currentStepData.id}_item_${idx}`;
+                    const isChecked = !!checkedItems[itemKey];
 
-                return (
-                  <label
-                    key={idx}
-                    onClick={() => toggleCheckItem(itemKey)}
-                    className={cn(
-                      "flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer text-xs sm:text-sm font-medium",
-                      isChecked 
-                        ? "bg-white border-[#859159] text-[#424733]" 
-                        : "bg-white/60 border-[#A38C66]/20 text-[#424733]/80 hover:bg-white"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors",
-                      isChecked 
-                        ? "bg-[#859159] border-[#859159] text-white" 
-                        : "border-[#A38C66]/50 bg-white"
-                    )}>
-                      {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    return (
+                      <label
+                        key={idx}
+                        onClick={() => toggleCheckItem(itemKey)}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer text-xs sm:text-sm font-medium",
+                          isChecked 
+                            ? "bg-white border-[#859159] text-[#424733]" 
+                            : "bg-white/60 border-[#A38C66]/20 text-[#424733]/80 hover:bg-white"
+                        )}
+                      >
+                        <div className={cn(
+                          "w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors",
+                          isChecked 
+                            ? "bg-[#859159] border-[#859159] text-white" 
+                            : "border-[#A38C66]/50 bg-white"
+                        )}>
+                          {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                        </div>
+                        <span className={cn(isChecked && "line-through text-[#424733]/60")}>
+                          {item}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+
+                {/* Observação sobre o formato das imagens na Etapa 1 */}
+                {currentStepData.id === 1 && (
+                  <div className="mt-3 p-3.5 bg-amber-50/90 border border-amber-300 rounded-xl text-xs sm:text-sm text-amber-950 flex items-start gap-2.5 shadow-2xs">
+                    <span className="text-base leading-none shrink-0 mt-0.5">📐</span>
+                    <div className="space-y-0.5">
+                      <strong className="text-amber-900 block font-bold">
+                        Observação sobre o tamanho das imagens:
+                      </strong>
+                      <p className="text-amber-900/90 leading-relaxed text-xs">
+                        Para que as fotos fiquem perfeitas e nítidas no seu aplicativo, utilize imagens no <strong>formato 1080 x 1080</strong> (quadrado).
+                      </p>
                     </div>
-                    <span className={cn(isChecked && "line-through text-[#424733]/60")}>
-                      {item}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Ações de Notificação no WhatsApp e Próximo Passo */}
-          <div className="pt-4 border-t border-[#A38C66]/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-            
-            {/* Botão de Avisar a Pati no WhatsApp com mensagem preenchida */}
-            <a
-              href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent(currentStepData.whatsappMessage)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3.5 bg-[#859159] hover:bg-[#424733] text-white font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 group"
-            >
-              <MessageCircle className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-              <span>{currentStepData.notifyText}</span>
-            </a>
-
-            {/* Botão para Avançar para a Próxima Etapa */}
-            {currentStepData.id < 3 ? (
-              <button
-                onClick={() => {
-                  if (!completedSteps.includes(currentStepData.id)) {
-                    setCompletedSteps(prev => [...prev, currentStepData.id]);
-                  }
-                  setActiveStep(currentStepData.id + 1);
-                  window.scrollTo({ top: 350, behavior: 'smooth' });
-                }}
-                className="w-full sm:w-auto px-6 py-3.5 bg-[#613C26] hover:bg-[#424733] text-white font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 cursor-pointer"
-              >
-                <span>Ir para a Etapa {currentStepData.id + 1}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            ) : (
-              <div className="flex items-center gap-2 text-xs font-bold text-[#859159]">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Parabéns! Você chegou ao final do guia!</span>
+                  </div>
+                )}
               </div>
-            )}
 
-          </div>
+              {/* Ações de Notificação no WhatsApp e Próximo Passo */}
+              <div className="pt-4 border-t border-[#A38C66]/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                
+                {/* Botão de Avisar a Pati no WhatsApp com mensagem preenchida */}
+                <a
+                  href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent(currentStepData.whatsappMessage)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-[#859159] hover:bg-[#424733] text-white font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 group"
+                >
+                  <MessageCircle className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+                  <span>{currentStepData.notifyText}</span>
+                </a>
+
+                {/* Botão para Avançar para a Próxima Etapa */}
+                {currentStepData.id < STEPS.length ? (
+                  <button
+                    onClick={() => {
+                      if (!completedSteps.includes(currentStepData.id)) {
+                        setCompletedSteps(prev => [...prev, currentStepData.id]);
+                      }
+                      setActiveStep(currentStepData.id + 1);
+                      window.scrollTo({ top: 320, behavior: 'smooth' });
+                    }}
+                    className="w-full sm:w-auto px-6 py-3.5 bg-[#613C26] hover:bg-[#424733] text-white font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 cursor-pointer"
+                  >
+                    <span>Ir para a Etapa {currentStepData.id + 1}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#859159]">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Parabéns! Todas as 4 etapas foram finalizadas com sucesso!</span>
+                  </div>
+                )}
+
+              </div>
+            </>
+          )}
 
         </section>
 
@@ -835,7 +1169,7 @@ export default function App() {
               Suporte Direto Durante o Processo
             </h3>
             <p className="text-xs text-[#424733]/80 leading-relaxed">
-              Travou em algum campo? Não se lembra da senha? O vídeo pediu permissão? Fique tranquila! A Pati da EASY BYZ acompanha cada aluna de perto até o app estar rodando perfeitamente.
+              Travou em algum campo? Não se lembra da senha? Fique tranquila! A Pati da EASY BYZ acompanha cada aluna de perto até o app estar rodando perfeitamente.
             </p>
             <div className="pt-2">
               <a
@@ -871,7 +1205,7 @@ export default function App() {
               title="EASY BYZ"
             >
               <img 
-                src="https://i.ibb.co/Z6NS1m4D/ebcb.png" 
+                src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/logo%20easy%20byz%20-%20fundo%20transparente.png" 
                 alt="EASY BYZ" 
                 className="h-32 sm:h-40 w-auto object-contain mx-auto"
                 referrerPolicy="no-referrer"
