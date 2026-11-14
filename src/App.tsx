@@ -95,8 +95,8 @@ const STEPS: StepData[] = [
     badge: "Etapa 2 de 4",
     subtitle: "Personalize as mensagens automáticas e textos do seu aplicativo",
     isVideoStep: true,
-    isComingSoonVideo: true,
-    videoId: "1AI0c9I1NVthwxt4L8iWdVTdtdw4Fz_mZ",
+    isComingSoonVideo: false,
+    videoId: "1Shtc1xb2dFGSWK9N1wSAbit5yBU1rVKl",
     coverTag: "MENSAGENS & PAINEL ADM",
     coverColor: "from-[#613C26] via-[#482b1b] to-[#2b170c]",
     coverHighlights: ["Login & Senha", "Textos Automáticos", "Informações de Pagamento"],
@@ -112,6 +112,7 @@ const STEPS: StepData[] = [
       text: "Utilize o link e a senha de acesso que enviei para você anteriormente para entrar na área administrativa do seu app."
     },
     checklist: [
+      "Assistir ao vídeo da Etapa 2 atentamente",
       "Fazer login no painel administrativo com sua senha",
       "Ajustar as mensagens do app para o tom da sua marmitaria",
       "Revisar informações de pagamento e avisos aos clientes",
