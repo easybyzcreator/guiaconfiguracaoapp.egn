@@ -29,10 +29,12 @@ import {
   Clock,
   Lightbulb,
   UtensilsCrossed,
-  Target
+  Target,
+  Handshake
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { PartnersPage } from './components/PartnersPage';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -175,10 +177,83 @@ const STEPS: StepData[] = [
   }
 ];
 
+const FOOTER_LOGO_URL =
+  'https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/logo%20easy%20byz%20-%20fundo%20transparente.png';
+
+const TintedFooterLogo: React.FC = () => {
+  const [tintedSrc, setTintedSrc] = useState<string>(FOOTER_LOGO_URL);
+
+  useEffect(() => {
+    let cancelled = false;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.referrerPolicy = 'no-referrer';
+
+    img.onload = () => {
+      try {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        if (!w || !h) return;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, w, h);
+        const data = imageData.data;
+
+        // Recolore os pixels visíveis para #F0F0F0 (mesma cor de "EGN - Escola de Gastronomia e Negócios")
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] > 0) {
+            data[i] = 240;
+            data[i + 1] = 240;
+            data[i + 2] = 240;
+          }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        const outUrl = canvas.toDataURL('image/png');
+        if (!cancelled) {
+          setTintedSrc(outUrl);
+        }
+      } catch {
+        // Fallback para imagem original se houver restrição
+      }
+    };
+
+    img.src = FOOTER_LOGO_URL;
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <img
+      src={tintedSrc}
+      alt="EASY BYZ"
+      className="h-[84px] sm:h-28 w-auto object-contain mx-auto"
+      referrerPolicy="no-referrer"
+    />
+  );
+};
+
 export default function App() {
   const { scrollY } = useScroll();
   const chefY = useTransform(scrollY, [0, 600], [0, -15]);
 
+  const getInitialPage = (): 'guide' | 'partners' => {
+    if (typeof window === 'undefined') return 'guide';
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('pagina') === 'parceiros' || window.location.hash === '#parceiros') {
+      return 'partners';
+    }
+    return 'guide';
+  };
+
+  const [activePage, setActivePage] = useState<'guide' | 'partners'>(getInitialPage);
   const [activeStep, setActiveStep] = useState<number>(1);
   const [playingVideoSteps, setPlayingVideoSteps] = useState<{ [key: number]: boolean }>({});
   const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
@@ -247,6 +322,36 @@ export default function App() {
     return completedSteps.includes(stepId - 1);
   };
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('pagina') === 'parceiros' || window.location.hash === '#parceiros') {
+        setActivePage('partners');
+      } else {
+        setActivePage('guide');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateToPage = (page: 'guide' | 'partners') => {
+    setActivePage(page);
+    try {
+      const url = new URL(window.location.href);
+      if (page === 'partners') {
+        url.searchParams.set('pagina', 'parceiros');
+      } else {
+        url.searchParams.delete('pagina');
+        url.hash = '';
+      }
+      window.history.pushState({}, '', url.toString());
+    } catch (e) {
+      console.warn('Erro ao atualizar URL:', e);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const currentStepData = STEPS.find(s => s.id === activeStep) || STEPS[0];
   const isCurrentStepUnlocked = isStepUnlocked(currentStepData.id);
   const isVideoPlaying = !!playingVideoSteps[currentStepData.id];
@@ -254,7 +359,7 @@ export default function App() {
   const totalProgressPercent = Math.round((completedSteps.length / STEPS.length) * 100);
 
   return (
-    <div className="min-h-screen bg-[#F0F0F0] font-sans text-[#424733] selection:bg-[#859159] selection:text-white antialiased">
+    <div className="min-h-screen overflow-x-hidden bg-[#F0F0F0] font-sans text-[#424733] selection:bg-[#859159] selection:text-white antialiased">
       
       {/* Top Header Bar */}
       <div className="bg-[#424733] text-[#F0F0F0] text-[11px] sm:text-xs md:text-sm py-2 px-3 text-center font-medium border-b border-[#613C26]">
@@ -273,15 +378,22 @@ export default function App() {
         </div>
       </div>
 
-      {/* Editorial Hero Header */}
-      <header className="max-w-6xl mx-auto pt-4 sm:pt-8 md:pt-10 px-3 sm:px-6 lg:px-8 mb-6 sm:mb-8">
+      {/* Conteúdo Principal: Guia de Aulas OU Página Parceiros EasyByz */}
+      {activePage === 'partners' ? (
+        <PartnersPage onBackToGuide={() => navigateToPage('guide')} />
+      ) : (
+        <>
+          {/* Editorial Hero Header */}
+          <header className="max-w-6xl mx-auto pt-4 sm:pt-8 md:pt-10 px-3 sm:px-6 lg:px-8 mb-6 sm:mb-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
           {/* Coluna Texto: Apresentação do Guia */}
           <div className="lg:col-span-7 xl:col-span-7 space-y-3 sm:space-y-4 text-center lg:text-left">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#859159]/15 border border-[#859159]/30 text-[#424733] text-[11px] sm:text-xs font-semibold">
-              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#859159]" />
-              <span>Manual de Configuração e Ativação do App</span>
+            <div className="pb-4 lg:pb-0">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#859159]/15 border border-[#859159]/30 text-[#424733] text-[11px] sm:text-xs font-semibold">
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#859159]" />
+                <span>Manual de Configuração e Ativação do App</span>
+              </div>
             </div>
 
             <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-[#424733] tracking-tight leading-tight">
@@ -291,6 +403,43 @@ export default function App() {
             <p className="text-xs sm:text-sm md:text-base text-[#424733]/85 leading-relaxed">
               Eu te entreguei o app personalizado de acordo com as informações da rotina da sua marmitaria que você me respondeu no questionário inicial. Em seguida, preparei este <strong>guia prático em 4 etapas</strong> para que você possa inserir seus pratos, configurar suas mensagens no painel, fazer os testes finais e planejar a divulgação oficial com segurança antes de começar a divulgar para seus clientes.
             </p>
+
+            {/* Somente na versão mobile: Fotos logo após o texto introdutório */}
+            <div className="lg:hidden py-2 flex justify-center">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-[420px]">
+                {/* Card Chef Gabi */}
+                <div className="relative rounded-xl sm:rounded-3xl overflow-hidden shadow-md border-2 border-white bg-[#FAF8F5] aspect-[3/4]">
+                  <img
+                    src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/chefegn.png"
+                    alt="Chef Gabi Paludo - EGN"
+                    className="w-full h-full object-cover object-top"
+                    loading="eager"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 text-white p-1.5 rounded-lg bg-black/60 backdrop-blur-xs border border-white/20 text-left">
+                    <span className="block font-bold text-white text-[10px] leading-tight">Chef Gabi Paludo</span>
+                    <span className="text-[#A38C66] text-[8px] uppercase font-bold tracking-wider">Metodologia EGN</span>
+                  </div>
+                </div>
+
+                {/* Card Pati Guimarães (Easy Byz) */}
+                <div className="relative rounded-xl sm:rounded-3xl overflow-hidden shadow-md border-2 border-white bg-[#FAF8F5] aspect-[3/4]">
+                  <img
+                    src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/patiebc.jpg"
+                    alt="Pati Guimarães - EASY BYZ"
+                    className="w-full h-full object-cover object-top"
+                    loading="eager"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 text-white p-1.5 rounded-lg bg-black/60 backdrop-blur-xs border border-white/20 text-left">
+                    <span className="block font-bold text-white text-[10px] leading-tight">Pati Guimarães</span>
+                    <span className="text-[#859159] text-[8px] uppercase font-bold tracking-wider">EASY BYZ • Suporte</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Banner de Aviso de Sequência (Destaque Principal) */}
             <div className="bg-amber-50 border-2 border-amber-300 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 md:p-5 text-left flex items-start gap-2.5 sm:gap-3.5 shadow-xs">
@@ -321,11 +470,11 @@ export default function App() {
                 repeat: Infinity, 
                 ease: "easeInOut" 
               }}
-              className="absolute -inset-4 sm:-inset-6 bg-gradient-to-tr from-[#859159]/25 via-[#A38C66]/20 to-transparent rounded-full blur-2xl sm:blur-3xl pointer-events-none -z-10"
+              className="hidden lg:block absolute -inset-4 sm:-inset-6 bg-gradient-to-tr from-[#859159]/25 via-[#A38C66]/20 to-transparent rounded-full blur-2xl sm:blur-3xl pointer-events-none -z-10"
             />
 
-            {/* Duas Fotos: Chef Gabi e Pati Guimarães lado a lado */}
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-[420px]">
+            {/* Duas Fotos: Somente no desktop (no mobile já aparecem acima da Regra de Ouro) */}
+            <div className="hidden lg:grid grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-[340px] sm:max-w-[420px]">
               
               {/* Card Chef Gabi */}
               <motion.div
@@ -368,7 +517,7 @@ export default function App() {
             </div>
 
             {/* Status de Progresso e Botão de Ajuda Rápida */}
-            <div className="mt-2.5 sm:mt-3.5 w-full max-w-[340px] sm:max-w-[420px] grid grid-cols-2 gap-2 sm:gap-2.5">
+            <div className="lg:mt-3.5 w-full max-w-[340px] sm:max-w-[420px] grid grid-cols-2 gap-2 sm:gap-2.5">
               <div className="bg-[#424733] text-white p-2.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-xs border border-[#613C26] flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] sm:text-[10px] text-[#A38C66] font-bold uppercase tracking-wider">Progresso</span>
@@ -489,9 +638,6 @@ export default function App() {
                   <span className="font-extrabold text-xs sm:text-sm md:text-base text-[#424733]">
                     App de Simulação da Escola (Sugestões de Mensagens)
                   </span>
-                  <span className="bg-[#859159]/15 text-[#424733] text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#859159]/30">
-                    Modelo de Exemplo
-                  </span>
                 </div>
                 <p className="text-[11px] sm:text-xs md:text-sm text-[#424733]/80 leading-relaxed max-w-2xl">
                   Acesse o aplicativo de simulação da Chef Gabi para ver sugestões de mensagens, textos de pedidos e exemplos práticos para o seu cardápio.
@@ -507,6 +653,81 @@ export default function App() {
             >
               <span>Ver App de Simulação</span>
               <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          </div>
+        </section>
+
+        {/* Banner/Botão Premium de Destaque: Parceiros EasyByz (em Marrom) */}
+        <section className="mb-6 sm:mb-8">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#613C26] via-[#53321f] to-[#3c2314] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-7 border-2 border-[#A38C66]/70 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+            <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-[#A38C66]/20 blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full bg-[#859159]/15 blur-2xl pointer-events-none" />
+
+            <div className="relative z-10 flex items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/15 border border-[#A38C66]/50 text-[#FAF8F5] flex items-center justify-center shrink-0 mt-0.5 shadow-inner">
+                <Handshake className="w-5 h-5 sm:w-6 sm:h-6" />
+              </div>
+
+              <div className="space-y-1 sm:space-y-1.5">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 border border-[#A38C66]/50 text-[#FAF8F5] text-[10px] sm:text-xs font-extrabold uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3 text-[#A38C66]" />
+                  <span>PARCEIROS EASYBYZ</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl md:text-[26px] font-black text-white leading-snug">
+                  Precisa de apoio para sua marmitaria crescer?
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#F0F0F0]/90 leading-relaxed max-w-2xl">
+                  Pensando e percebendo as necessidades reais das nossas clientes, reunimos empresas e profissionais de confiança que recomendamos para ajudar você com serviços e produtos essenciais para o seu negócio.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigateToPage('partners')}
+              className="relative z-10 w-full md:w-auto px-5 sm:px-6 py-3.5 sm:py-4 bg-[#859159] hover:bg-[#424733] text-white font-black text-xs sm:text-sm md:text-base rounded-xl sm:rounded-2xl transition-all shadow-md hover:shadow-xl flex items-center justify-center gap-2 shrink-0 cursor-pointer group border border-white/25"
+            >
+              <span>Conhecer Parceiros EasyByz</span>
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </section>
+
+        {/* Box Discreto: Serviço Opcional de Cadastro de Cardápio */}
+        <section className="mb-6 sm:mb-8">
+          <div className="bg-gradient-to-r from-[#FAF8F5] via-white to-[#FAF8F5] rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-[#A38C66]/40 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 sm:gap-5">
+            <div className="flex items-start gap-3 sm:gap-3.5">
+              <img
+                src="https://raw.githubusercontent.com/easybyzcreator/imagens/92cb499e86868ed1f22fe1399da839537a9e3695/icone%20alerta.png"
+                alt="Alerta"
+                className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 mt-0.5"
+                referrerPolicy="no-referrer"
+              />
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-sm sm:text-base md:text-xl text-[#424733] leading-snug">
+                  Não tem tempo para inserir o seu cardápio ou tem dificuldade e gostaria que nós fizéssemos isso por você?
+                </h4>
+                <p className="text-[11px] sm:text-xs md:text-sm text-[#424733]/85 leading-relaxed">
+                  Sim, isso é possível! Entre em contato e solicite um orçamento desse serviço para receber seu cardápio pronto no aplicativo.
+                </p>
+                <p className="text-[10px] sm:text-[11px] text-[#424733]/60 font-medium">
+                  Serviço opcional a partir de R$ 97,00 (o valor varia conforme a quantidade de itens do cardápio e pode ser parcelado em até 2 vezes).
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent(
+                'Olá Pati, estou acessando as aulas de configuração de app, mas gostaria de solicitar um orçamento para que você pudesse me entregar o meu cardápio pronto.'
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full md:w-auto px-4 sm:px-5 py-2.5 sm:py-3 bg-[#613C26] hover:bg-[#859159] text-white font-bold text-xs sm:text-sm rounded-xl transition-colors shadow-2xs hover:shadow-xs flex items-center justify-center gap-2 shrink-0"
+            >
+              <MessageCircle className="w-4 h-4 shrink-0" />
+              <span>Solicitar Orçamento</span>
             </a>
           </div>
         </section>
@@ -637,8 +858,8 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Container 16:9 - Capa Estilizada OU Player/Em Breve */}
-                  <div className="relative w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/95 shadow-md sm:shadow-2xl border sm:border-2 border-[#424733] group">
+                  {/* Container Responsivo - Capa Estilizada OU Player/Em Breve */}
+                  <div className="relative w-full h-[280px] sm:h-auto sm:aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/95 shadow-md sm:shadow-2xl border sm:border-2 border-[#424733] group">
                     
                     {!isVideoPlaying ? (
                       /* CAPA VISUAL PERSONALIZADA NA FRENTE DO VÍDEO */
@@ -753,7 +974,7 @@ export default function App() {
                         src={`https://drive.google.com/file/d/${currentStepData.videoId}/preview`}
                         title={`Vídeo explicativo - ${currentStepData.title}`}
                         className="w-full h-full border-0"
-                        allow="autoplay; fullscreen"
+                        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                         allowFullScreen
                       />
                     )}
@@ -905,15 +1126,47 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Box Opcional: Vídeo Profissional com Especialista */}
+                  <div className="bg-gradient-to-r from-[#FAF8F5] via-white to-[#FAF8F5] rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-[#859159]/45 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 sm:gap-5">
+                    <div className="flex items-start gap-3 sm:gap-3.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#859159]/15 border border-[#859159]/30 text-[#424733] flex items-center justify-center shrink-0 mt-0.5">
+                        <Video className="w-5 h-5 text-[#613C26]" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <h4 className="font-bold text-sm sm:text-base md:text-xl text-[#424733] leading-snug">
+                          Quer ter um vídeo profissional, feito por um especialista?
+                        </h4>
+                        <p className="text-[11px] sm:text-xs md:text-sm text-[#424733]/85 leading-relaxed">
+                          Nós temos como parceira a pessoa ideal que pode te ajudar nessa etapa. Caso tenha interesse, clique aqui e fale com a gente!
+                        </p>
+                        <p className="text-[10px] sm:text-[11px] text-[#424733]/65 font-medium">
+                          Valores a partir de R$ 150,00/vídeo
+                        </p>
+                      </div>
+                    </div>
+
+                    <a
+                      href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent(
+                        'Olá Pati, sou aluna da chef Gabi e gostaria de ter uma profissional fazendo o meu vídeo de divulgação do cardápio.'
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full md:w-auto px-4 sm:px-5 py-2.5 sm:py-3 bg-[#859159] hover:bg-[#613C26] text-white font-bold text-xs sm:text-sm rounded-xl transition-colors shadow-2xs hover:shadow-xs flex items-center justify-center gap-2 shrink-0"
+                    >
+                      <MessageCircle className="w-4 h-4 shrink-0" />
+                      <span>Falar com a gente</span>
+                    </a>
+                  </div>
+
                   {/* Box de Destaque Importante sobre Vendas e Marmitas */}
-                  <div className="bg-[#FAF8F5] border-2 border-[#613C26] rounded-xl sm:rounded-2xl p-4 sm:p-6 text-[#424733] shadow-sm space-y-2.5 sm:space-y-3 relative overflow-hidden">
+                  <div className="bg-[#FAF8F5] border-2 border-[#613C26] rounded-xl sm:rounded-2xl p-4 sm:p-6 text-[#424733] shadow-sm space-y-3 sm:space-y-4 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#859159]/10 rounded-full blur-2xl pointer-events-none" />
 
-                    <div className="flex items-center gap-2.5">
-                      <div className="p-1.5 sm:p-2 bg-[#613C26] text-white rounded-lg sm:rounded-xl shrink-0 shadow-2xs">
+                    <div className="flex items-start gap-3">
+                      <div className="p-1.5 sm:p-2 bg-[#613C26] text-white rounded-lg sm:rounded-xl shrink-0 shadow-2xs mt-0.5">
                         <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       </div>
-                      <div>
+                      <div className="space-y-1.5 sm:space-y-2">
                         <span className="text-[9px] sm:text-xs font-black uppercase text-[#859159] tracking-wider block">
                           Lembrete Fundamental de Vendas
                         </span>
@@ -1120,17 +1373,9 @@ export default function App() {
             <p className="text-xs text-[#424733]/80 leading-relaxed">
               O QR Code do seu aplicativo é perfeito para colocar em adesivos das embalagens, sacolas, panfletos e imãs de geladeira. O cliente aponta a câmera e abre o seu cardápio instantaneamente!
             </p>
-            <div className="pt-1">
-              <a
-                href={`https://wa.me/${EASYBYZ_WHATSAPP}?text=${encodeURIComponent("Olá Pati, gostaria de solicitar o arquivo em alta resolução do QR Code do meu aplicativo para imprimir nas minhas embalagens.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-bold text-[#613C26] hover:text-[#859159] transition-colors"
-              >
-                <span>Solicitar QR Code com a Pati</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
+            <p className="text-xs font-semibold text-[#613C26] pt-1">
+              O QR Code já está disponível dentro do seu aplicativo, na aba <strong>"Configurações"</strong> do painel administrativo.
+            </p>
           </div>
 
           {/* Card Dúvidas & Suporte */}
@@ -1160,6 +1405,8 @@ export default function App() {
         </section>
 
       </main>
+        </>
+      )}
 
       {/* Footer com Identidade EGN & EASY BYZ (Preservado e Proporcional) */}
       <footer className="border-t border-[#A38C66]/30 bg-[#424733] py-8 sm:py-12 px-4 text-[#F0F0F0] text-center text-xs sm:text-sm">
@@ -1167,7 +1414,7 @@ export default function App() {
           
           {/* Logo EASY BYZ no Rodapé */}
           <div className="flex flex-col items-center justify-center gap-2 sm:gap-3">
-            <span className="text-[10px] sm:text-xs text-[#A38C66] uppercase tracking-wider font-semibold">
+            <span className="text-[10px] sm:text-xs text-[#F0F0F0] uppercase tracking-wider font-semibold">
               Desenvolvido & Comercializado por
             </span>
             <a 
@@ -1177,12 +1424,7 @@ export default function App() {
               className="inline-block hover:opacity-90 transition-opacity"
               title="EASY BYZ"
             >
-              <img 
-                src="https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/logo%20easy%20byz%20-%20fundo%20transparente.png" 
-                alt="EASY BYZ" 
-                className="h-16 sm:h-28 w-auto object-contain mx-auto"
-                referrerPolicy="no-referrer"
-              />
+              <TintedFooterLogo />
             </a>
           </div>
 
