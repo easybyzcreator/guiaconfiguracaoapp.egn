@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { 
   CheckCircle2, 
   Award, 
@@ -30,7 +30,8 @@ import {
   Lightbulb,
   UtensilsCrossed,
   Target,
-  Handshake
+  Handshake,
+  X
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -177,6 +178,54 @@ const STEPS: StepData[] = [
   }
 ];
 
+interface InspirationVideo {
+  id: string;
+  shortcode: string;
+  label: string;
+  brand: string;
+  highlight?: string;
+  url: string;
+}
+
+const INSPIRATION_VIDEOS: InspirationVideo[] = [
+  {
+    id: 'video-1',
+    shortcode: 'Dfw-VKiPHLV',
+    label: 'Vídeo 1',
+    brand: 'Grão & Sabor',
+    highlight: 'Vídeo feito pela profissional que recomendamos aqui',
+    url: 'https://www.instagram.com/p/Dfw-VKiPHLV/',
+  },
+  {
+    id: 'video-2',
+    shortcode: 'DeuM6zVg88m',
+    label: 'Vídeo 2',
+    brand: 'Lu das Marmitas',
+    url: 'https://www.instagram.com/p/DeuM6zVg88m/',
+  },
+  {
+    id: 'video-3',
+    shortcode: 'De9vt3EJMOL',
+    label: 'Vídeo 3',
+    brand: 'Donari Marmitaria',
+    url: 'https://www.instagram.com/p/De9vt3EJMOL/',
+  },
+  {
+    id: 'video-4',
+    shortcode: 'Defbj39vcrt',
+    label: 'Vídeo 4',
+    brand: 'Aroma & Sabores',
+    url: 'https://www.instagram.com/p/Defbj39vcrt/',
+  },
+  {
+    id: 'video-5',
+    shortcode: 'DeNEuCWIn4w',
+    label: 'Vídeo 5',
+    brand: 'Cozinha de Mãe',
+    url: 'https://www.instagram.com/p/DeNEuCWIn4w/',
+  },
+];
+
 const FOOTER_LOGO_URL =
   'https://raw.githubusercontent.com/easybyzcreator/imagens/8afcc7b58eca4ce99fe97d845b2baf50507ee6bc/logo%20easy%20byz%20-%20fundo%20transparente.png';
 
@@ -255,6 +304,18 @@ export default function App() {
 
   const [activePage, setActivePage] = useState<'guide' | 'partners'>(getInitialPage);
   const [activeStep, setActiveStep] = useState<number>(1);
+  const [selectedInspirationVideo, setSelectedInspirationVideo] = useState<InspirationVideo | null>(null);
+
+  useEffect(() => {
+    if (!selectedInspirationVideo) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedInspirationVideo(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedInspirationVideo]);
   const [playingVideoSteps, setPlayingVideoSteps] = useState<{ [key: number]: boolean }>({});
   const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
     try {
@@ -1111,6 +1172,67 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Card de Inspirações: Vídeos de Alunas no Instagram */}
+                  <div className="bg-[#FAF8F5] border sm:border-2 border-[#A38C66]/45 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-7 shadow-2xs space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#613C26] text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+                        <Tv className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[10px] sm:text-xs font-extrabold uppercase text-[#859159] tracking-wider block">
+                          Exemplos Reais de Inspiração
+                        </span>
+                        <h4 className="text-sm sm:text-base md:text-lg font-black text-[#424733] leading-snug">
+                          Veja vídeos de outras alunas para se inspirar e ter ideias
+                        </h4>
+                        <p className="text-xs sm:text-sm text-[#424733]/85 leading-relaxed">
+                          Selecionamos exemplos reais seguindo exatamente as coordenadas acima de como apresentar o cardápio e o aplicativo. Clique em qualquer vídeo abaixo para assistir aqui mesmo sem sair da página:
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      {INSPIRATION_VIDEOS.map((video, index) => (
+                        <button
+                          key={video.id}
+                          type="button"
+                          onClick={() => setSelectedInspirationVideo(video)}
+                          className={cn(
+                            'bg-white hover:bg-[#FAF8F5] border border-[#A38C66]/35 hover:border-[#613C26] rounded-xl p-3 sm:p-3.5 flex items-center justify-between gap-3 text-left transition-all cursor-pointer group shadow-2xs hover:shadow-sm',
+                            index === 0 && 'sm:col-span-2 border-[#859159]/50 bg-[#859159]/[0.04]'
+                          )}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#859159]/15 group-hover:bg-[#613C26] text-[#613C26] group-hover:text-white flex items-center justify-center shrink-0 transition-colors">
+                              <Play className="w-4 h-4 fill-current ml-0.5" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#859159]">
+                                  {video.label}
+                                </span>
+                                {video.highlight && (
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#859159]/15 border border-[#859159]/35 text-[#424733] text-[10px] font-bold">
+                                    <Sparkles className="w-2.5 h-2.5 text-[#859159] shrink-0" />
+                                    <span>{video.highlight}</span>
+                                  </span>
+                                )}
+                              </div>
+                              <p className="font-bold text-xs sm:text-sm text-[#424733] group-hover:text-[#613C26] truncate transition-colors mt-0.5">
+                                {video.brand}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F5] group-hover:bg-[#613C26] text-[#424733] group-hover:text-white border border-[#A38C66]/30 group-hover:border-[#613C26] text-[11px] sm:text-xs font-bold shrink-0 transition-colors">
+                            <span>Assistir</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Dica de Ouro em Destaque */}
                   <div className="bg-amber-50 border-2 border-amber-300 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-amber-950 flex items-start gap-2.5 sm:gap-3 shadow-2xs">
                     <div className="p-1.5 sm:p-2 bg-amber-200 text-amber-900 rounded-lg sm:rounded-xl shrink-0 mt-0.5">
@@ -1462,6 +1584,83 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* Modal Pop-up para Assistir Vídeos de Inspiração do Instagram na Própria Página */}
+      <AnimatePresence>
+        {selectedInspirationVideo && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/70 backdrop-blur-xs"
+            onClick={() => setSelectedInspirationVideo(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md bg-white rounded-2xl sm:rounded-3xl border-2 border-[#A38C66]/45 shadow-2xl p-4 sm:p-5 max-h-[92vh] flex flex-col gap-3"
+            >
+              {/* Cabeçalho do Pop-up */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-0.5 min-w-0">
+                  <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-[#859159] block">
+                    {selectedInspirationVideo.label} • Inspiração
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-[#424733] leading-tight truncate">
+                    {selectedInspirationVideo.brand}
+                  </h3>
+                  {selectedInspirationVideo.highlight && (
+                    <p className="text-[11px] text-[#613C26] font-semibold">
+                      {selectedInspirationVideo.highlight}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedInspirationVideo(null)}
+                  className="w-9 h-9 rounded-full bg-[#FAF8F5] hover:bg-[#F0F0F0] text-[#424733] border border-[#A38C66]/35 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                  aria-label="Fechar vídeo"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Player Embed do Instagram */}
+              <div className="w-full h-[460px] sm:h-[520px] rounded-xl sm:rounded-2xl overflow-hidden border border-[#A38C66]/30 bg-[#FAF8F5]">
+                <iframe
+                  src={`https://www.instagram.com/p/${selectedInspirationVideo.shortcode}/embed/`}
+                  title={`Vídeo de inspiração - ${selectedInspirationVideo.brand}`}
+                  className="w-full h-full border-0"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+
+              {/* Rodapé do Pop-up: Botão Rápido de Voltar + Fallback Instagram */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setSelectedInspirationVideo(null)}
+                  className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-[#613C26] hover:bg-[#859159] text-white font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+                >
+                  Fechar e voltar para a página
+                </button>
+
+                <a
+                  href={selectedInspirationVideo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto py-2.5 px-3.5 rounded-xl bg-[#FAF8F5] hover:bg-[#F0F0F0] text-[#424733] border border-[#A38C66]/35 font-semibold text-xs inline-flex items-center justify-center gap-1.5 transition-colors shrink-0"
+                >
+                  <span>Abrir no Instagram</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
